@@ -1,0 +1,15 @@
+{
+    "barcode": {
+        "start_number": "43000001",
+        "height": "20",
+        "module_width": "4"
+    },
+    "label": {
+        "num_labels": "10",
+        "x_pos": "5",
+        "y_pos": "5"
+    },
+    "printer": {
+        "name": "Preview"
+    }
+}
