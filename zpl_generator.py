@@ -85,17 +85,33 @@ class ZPLGenerator:
         self.start_number.insert(0, "4300012")
         self.start_number.grid(row=0, column=1, sticky=tk.W, padx=5)
         
+        # BY Parameters
+        by_frame = ttk.LabelFrame(barcode_frame, text="^BY Parameters", padding="5")
+        by_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=5)
+        
+        # Module Width (w)
+        ttk.Label(by_frame, text="Module Width (1-10):").grid(row=0, column=0, sticky=tk.W)
+        self.by_width = ttk.Entry(by_frame, width=10)
+        self.by_width.insert(0, "2")
+        self.by_width.grid(row=0, column=1, sticky=tk.W, padx=5)
+        
+        # Ratio (r)
+        ttk.Label(by_frame, text="Ratio (2.0-3.0):").grid(row=1, column=0, sticky=tk.W)
+        self.by_ratio = ttk.Entry(by_frame, width=10)
+        self.by_ratio.insert(0, "3.0")
+        self.by_ratio.grid(row=1, column=1, sticky=tk.W, padx=5)
+        
+        # Height (h)
+        ttk.Label(by_frame, text="Height:").grid(row=2, column=0, sticky=tk.W)
+        self.by_height = ttk.Entry(by_frame, width=10)
+        self.by_height.insert(0, "10")
+        self.by_height.grid(row=2, column=1, sticky=tk.W, padx=5)
+        
         # Barcode Height
-        ttk.Label(barcode_frame, text="Height:").grid(row=1, column=0, sticky=tk.W)
+        ttk.Label(barcode_frame, text="Barcode Height:").grid(row=2, column=0, sticky=tk.W)
         self.barcode_height = ttk.Entry(barcode_frame, width=10)
         self.barcode_height.insert(0, "30")
-        self.barcode_height.grid(row=1, column=1, sticky=tk.W, padx=5)
-        
-        # Module Width
-        ttk.Label(barcode_frame, text="Module Width:").grid(row=2, column=0, sticky=tk.W)
-        self.module_width = ttk.Entry(barcode_frame, width=10)
-        self.module_width.insert(0, "4")
-        self.module_width.grid(row=2, column=1, sticky=tk.W, padx=5)
+        self.barcode_height.grid(row=2, column=1, sticky=tk.W, padx=5)
 
     def create_label_section(self):
         label_frame = ttk.LabelFrame(self.main_frame, text="Label Parameters", padding="5")
@@ -180,7 +196,9 @@ class ZPLGenerator:
                 'barcode': {
                     'start_number': self.start_number.get(),
                     'height': self.barcode_height.get(),
-                    'module_width': self.module_width.get()
+                    'by_width': self.by_width.get(),
+                    'by_ratio': self.by_ratio.get(),
+                    'by_height': self.by_height.get()
                 },
                 'label': {
                     'num_labels': self.num_labels.get(),
@@ -210,8 +228,12 @@ class ZPLGenerator:
                 self.start_number.insert(0, defaults['barcode']['start_number'])
                 self.barcode_height.delete(0, tk.END)
                 self.barcode_height.insert(0, defaults['barcode']['height'])
-                self.module_width.delete(0, tk.END)
-                self.module_width.insert(0, defaults['barcode']['module_width'])
+                self.by_width.delete(0, tk.END)
+                self.by_width.insert(0, defaults['barcode']['by_width'])
+                self.by_ratio.delete(0, tk.END)
+                self.by_ratio.insert(0, defaults['barcode']['by_ratio'])
+                self.by_height.delete(0, tk.END)
+                self.by_height.insert(0, defaults['barcode']['by_height'])
                 
                 # Load label settings
                 self.num_labels.delete(0, tk.END)
@@ -254,7 +276,9 @@ class ZPLGenerator:
             'barcode': {
                 'start_number': self.start_number.get(),
                 'height': self.barcode_height.get(),
-                'module_width': self.module_width.get()
+                'by_width': self.by_width.get(),
+                'by_ratio': self.by_ratio.get(),
+                'by_height': self.by_height.get()
             },
             'label': {
                 'num_labels': self.num_labels.get(),
@@ -294,8 +318,12 @@ class ZPLGenerator:
                 self.start_number.insert(0, config['barcode']['start_number'])
                 self.barcode_height.delete(0, tk.END)
                 self.barcode_height.insert(0, config['barcode']['height'])
-                self.module_width.delete(0, tk.END)
-                self.module_width.insert(0, config['barcode']['module_width'])
+                self.by_width.delete(0, tk.END)
+                self.by_width.insert(0, config['barcode']['by_width'])
+                self.by_ratio.delete(0, tk.END)
+                self.by_ratio.insert(0, config['barcode']['by_ratio'])
+                self.by_height.delete(0, tk.END)
+                self.by_height.insert(0, config['barcode']['by_height'])
                 
                 # Load label settings
                 self.num_labels.delete(0, tk.END)
@@ -350,7 +378,9 @@ class ZPLGenerator:
             # Get values from entries
             start_num = self.start_number.get()
             height = self.barcode_height.get()
-            module_width = self.module_width.get()
+            by_width = self.by_width.get()
+            by_ratio = self.by_ratio.get()
+            by_height = self.by_height.get()
             num_labels = self.num_labels.get()
             x_pos = self.x_pos.get()
             y_pos = self.y_pos.get()
@@ -359,7 +389,7 @@ class ZPLGenerator:
             zpl = f"""^XA
 ^LH5,5
 ^FO{x_pos},{y_pos}
-^BY1,{module_width}
+^BY{by_width},{by_ratio},{by_height}
 ^BCN,{height},Y,N,N
 ^SN{start_num},1,Y
 ^PQ{num_labels}
